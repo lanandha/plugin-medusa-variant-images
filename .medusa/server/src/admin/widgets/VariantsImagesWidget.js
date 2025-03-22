@@ -1,7 +1,7 @@
 import { jsx, jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
-import { TooltipProvider, Toaster, Heading, DropdownMenu, Button, Tooltip, Table, toast } from "@medusajs/ui";
-import { EllipsisHorizontal, PencilSquare, ThumbnailBadge } from "@medusajs/icons";
+import { TooltipProvider, Toaster, Heading, Tooltip, Button, clx, DropdownMenu, Table, toast } from "@medusajs/ui";
+import { ArrowPath, EllipsisHorizontal, PencilSquare, ThumbnailBadge } from "@medusajs/icons";
 import VariantsImagesModal from "../VariantImages/VariantsImagesModal.js";
 import { defineWidgetConfig } from "@medusajs/admin-sdk";
 import ViewImagesModal from "../VariantImages/ViewImagesModal.js";
@@ -40,9 +40,10 @@ const VariantsImagesWidget = ({ data }) => {
     }
   };
   const { fetching, timeLeft, restart } = useTimer({
-    length: 6e4,
+    length: 5 * 60 * 1e3,
+    // 5 minutes instead of 1 minute
     onComplete: async () => await updateData({ options: true, product: true, variants: true }),
-    recursive: true
+    recursive: false
   });
   useEffect(() => {
     updateData({ options: true, variants: true });
@@ -56,7 +57,7 @@ const VariantsImagesWidget = ({ data }) => {
         }
       }));
     });
-  }, []);
+  }, [product.id]);
   const handleClose = (_product) => {
     setOpenedVariant(null);
     setOpenedDialogType(null);
@@ -69,7 +70,18 @@ const VariantsImagesWidget = ({ data }) => {
     /* @__PURE__ */ jsxs("div", { className: "divide-y shadow-elevation-card-rest bg-ui-bg-base w-full rounded-lg divide-y p-0", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex flex-row justify-between items-center px-6 py-4", children: [
         /* @__PURE__ */ jsx(Heading, { level: "h1", className: "flex items-center justify-between gap-x-4 ", children: /* @__PURE__ */ jsx("div", { children: "Variants Images" }) }),
-        /* @__PURE__ */ jsx("div", { className: "flex flex-row gap-x-4", children: /* @__PURE__ */ jsx(WidgetSettingsModal, { settings, setSettings, product, options }) })
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-row gap-x-4", children: [
+          /* @__PURE__ */ jsx(Tooltip, { content: "Refresh", children: /* @__PURE__ */ jsx(
+            Button,
+            {
+              variant: "transparent",
+              onClick: () => updateData({ options: true, product: true, variants: true }),
+              className: "h-7 p-1 flex flex-row gap-x-2 text-ui-fg-subtle",
+              children: /* @__PURE__ */ jsx(ArrowPath, { className: clx(fetching && "animate-spin") })
+            }
+          ) }),
+          /* @__PURE__ */ jsx(WidgetSettingsModal, { settings, setSettings, product, options })
+        ] })
       ] }),
       /* @__PURE__ */ jsx("div", { className: "grid grid-cols-[repeat(auto-fill,minmax(225px,1fr))] gap-3 px-6 py-4", children: currentVariants == null ? void 0 : currentVariants.map((variant) => {
         var _a2, _b;
