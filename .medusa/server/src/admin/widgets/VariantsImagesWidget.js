@@ -1,7 +1,7 @@
-import { jsxs, Fragment, jsx } from "react/jsx-runtime";
+import { jsx, jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
-import { Toaster, Heading, Tooltip, Button, clx, DropdownMenu, Table, toast } from "@medusajs/ui";
-import { ArrowPath, EllipsisHorizontal, PencilSquare, ThumbnailBadge } from "@medusajs/icons";
+import { TooltipProvider, Toaster, Heading, DropdownMenu, Button, Tooltip, Table, toast } from "@medusajs/ui";
+import { EllipsisHorizontal, PencilSquare, ThumbnailBadge } from "@medusajs/icons";
 import VariantsImagesModal from "../VariantImages/VariantsImagesModal.js";
 import { defineWidgetConfig } from "@medusajs/admin-sdk";
 import ViewImagesModal from "../VariantImages/ViewImagesModal.js";
@@ -45,7 +45,6 @@ const VariantsImagesWidget = ({ data }) => {
     recursive: true
   });
   useEffect(() => {
-    updateData({ options: true, variants: true });
     fetchBackend(`/admin/variant-images-settings/${product.id}`).then((res) => {
       if (!res) return;
       setSettings((_current) => ({
@@ -64,26 +63,19 @@ const VariantsImagesWidget = ({ data }) => {
   };
   const paginationOptions = paginationInformation(product.variants);
   const { currentVariants } = paginationOptions;
-  return /* @__PURE__ */ jsxs(Fragment, { children: [
+  return /* @__PURE__ */ jsxs(TooltipProvider, { children: [
     /* @__PURE__ */ jsx(Toaster, {}),
     /* @__PURE__ */ jsxs("div", { className: "divide-y shadow-elevation-card-rest bg-ui-bg-base w-full rounded-lg divide-y p-0", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex flex-row justify-between items-center px-6 py-4", children: [
         /* @__PURE__ */ jsx(Heading, { level: "h1", className: "flex items-center justify-between gap-x-4 ", children: /* @__PURE__ */ jsx("div", { children: "Variants Images" }) }),
-        /* @__PURE__ */ jsxs("div", { className: "flex flex-row gap-x-4", children: [
-          /* @__PURE__ */ jsx(Tooltip, { content: "Refresh", children: /* @__PURE__ */ jsxs(Button, { variant: "transparent", onClick: () => restart(), className: "h-7 p-1 flex flex-row gap-x-2 text-ui-fg-subtle", children: [
-            /* @__PURE__ */ jsx(ArrowPath, { className: clx(fetching && "animate-spin") }),
-            " ",
-            /* @__PURE__ */ jsx("span", { className: "text-xs w-4", children: timeLeft })
-          ] }) }),
-          /* @__PURE__ */ jsx(WidgetSettingsModal, { settings, setSettings, product, options })
-        ] })
+        /* @__PURE__ */ jsx("div", { className: "flex flex-row gap-x-4", children: /* @__PURE__ */ jsx(WidgetSettingsModal, { settings, setSettings, product, options }) })
       ] }),
       /* @__PURE__ */ jsx("div", { className: "grid grid-cols-[repeat(auto-fill,minmax(225px,1fr))] gap-3 px-6 py-4", children: currentVariants == null ? void 0 : currentVariants.map((variant) => {
         var _a2, _b;
         const variantImages = (_a2 = variant.metadata) == null ? void 0 : _a2.images;
         const variantThumbnail = (_b = variant.metadata) == null ? void 0 : _b.thumbnail;
-        return /* @__PURE__ */ jsxs("div", { className: "w-full p-3 bg-[rgba(45,45,49,1)] rounded-md flex flex-col", children: [
-          /* @__PURE__ */ jsxs("div", { className: "flex items-center mb-3 bg-ui-bg-base rounded-full text-center relative py-[1.5px]", children: [
+        return /* @__PURE__ */ jsxs("div", { className: "w-full p-3 border rounded-md flex flex-col", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center mb-3 border bg-ui-bg-base rounded-full text-center relative py-[1.5px]", children: [
             /* @__PURE__ */ jsx("div", { className: "inter-base-semibold flex-1", children: variant.title }),
             /* @__PURE__ */ jsxs(DropdownMenu, { children: [
               /* @__PURE__ */ jsx(DropdownMenu.Trigger, { asChild: true, children: /* @__PURE__ */ jsx(Button, { variant: "transparent", className: "rounded-full absolute right-0 top-0", children: /* @__PURE__ */ jsx(EllipsisHorizontal, {}) }) }),
