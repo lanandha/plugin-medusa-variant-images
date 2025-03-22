@@ -164,9 +164,9 @@ const VariantsImagesWidget = ({ data }) => {
   ] });
 };
 const Image = ({ image }) => /* @__PURE__ */ jsx("img", { src: image.url, alt: "Uploaded image", className: "object-cover aspect-square w-full h-full bg-clip-border rounded-md" });
-// const config = defineWidgetConfig({
-//   zone: "product.details.after"
-// });
+const config = defineWidgetConfig({
+  zone: "product.details.after"
+});
 export {
   Image,
   config,
