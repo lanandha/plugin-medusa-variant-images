@@ -45,6 +45,7 @@ const VariantsImagesWidget = ({ data }) => {
     recursive: true
   });
   useEffect(() => {
+    updateData({ options: true, variants: true });
     fetchBackend(`/admin/variant-images-settings/${product.id}`).then((res) => {
       if (!res) return;
       setSettings((_current) => ({
